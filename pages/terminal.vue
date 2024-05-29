@@ -1,12 +1,13 @@
 <template>
   <main>
     <div class="message welcome">
-      CERBERUS v2322.1
+      CERBERUS v2422.1
     </div>
     <div class="message" v-for="message in messages">
       {{ message.content }}
     </div>
-    <span class="caret-block">&gt;</span><input class="caret-block" :class="{'submitted blink': isSubmitting}" type="text" v-model="newMessage" @keyup.enter="postMessage">
+    <span class="caret-block">&gt;</span>
+    <input ref="inputField" class="caret-block" :class="{'submitted blink': isSubmitting}" type="text" v-model="newMessage" @keyup.enter="postMessage">
     <div class="loader message" v-if="isSubmitting">
       <span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span>
     </div>
@@ -28,6 +29,9 @@ export default {
   },
   mounted() {
     this.implementation = this.$route.query.implementation;
+    this.$nextTick(() => {
+      this.$refs.inputField.focus();
+    });
   },
   methods: {
     async postMessage () {
