@@ -1,5 +1,8 @@
 <template>
   <main>
+    <div class="message welcome">
+      CERBERUS v2322.1
+    </div>
     <div class="message" v-for="message in messages">
       {{ message.content }}
     </div>
@@ -20,7 +23,7 @@ export default {
       implementation: "",
       newMessage: "",
       isSubmitting: false,
-      messages: [{"content": "CERBERUS v2322.1"}],
+      messages: [],
     }
   },
   mounted() {
@@ -83,5 +86,8 @@ input:focus, input:active {
 }
 .message:before {
   content: '> ';
+}
+.message.welcome:before {
+  content: '#! ';
 }
 </style>
