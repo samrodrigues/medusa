@@ -3,7 +3,7 @@
     <div class="message welcome">
       CERBERUS v2422.1
     </div>
-    <div class="message" v-for="message in messages">
+    <div class="message" v-for="message in messages" :class="message.className">
       {{ message.content }}
     </div>
     <span class="caret-block">&gt;</span>
@@ -38,8 +38,8 @@ export default {
       this.isSubmitting = true;
       const {data} = await axios.post(`https://cerberus-vsm8.onrender.com/api/implementations/${this.implementation}`, {message: this.newMessage})
       this.isSubmitting = false;
-      this.messages.push({"content": this.newMessage})
-      this.messages.push({"content": data?.response?.[0]?.[1] || 'bad response'})
+      this.messages.push({"content": this.newMessage, className: 'user'})
+      this.messages.push({"content": data?.response?.[0]?.[1] || 'bad response', className: 'bot'})
       this.newMessage = '';
     }
   }
@@ -63,6 +63,7 @@ input {
   caret-shape: block;
   font-family: monospace;
   margin-bottom: 6px;
+  width: calc(100% - 48px);
 }
 input.submitted {
   color: #878787;
@@ -93,5 +94,8 @@ input:focus, input:active {
 }
 .message.welcome:before {
   content: '#! ';
+}
+.user {
+  color: #878787;
 }
 </style>
