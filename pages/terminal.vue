@@ -8,6 +8,7 @@
     </div>
     <span class="caret-block">&gt;</span>
     <input ref="inputField" class="caret-block" :class="{'submitted blink': isSubmitting}" type="text" v-model="newMessage" @keyup.enter="postMessage">
+    <div class="cursor" v-if="!isSubmitting"></div>
     <div class="loader message" v-if="isSubmitting">
       <span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span>
     </div>
@@ -72,6 +73,22 @@ input.submitted {
   color: #878787;
   caret-color: transparent;
 }
+input:focus + .cursor,
+input:active + .cursor {
+  opacity: 0;
+}
+.cursor {
+  opacity: 1;
+  position: relative;
+  left: 0;
+  margin-top: -5px;
+  margin-left: 14px;
+  height: 1.5px;
+  width: 11px;
+  background-color: #dedede;
+  animation: 1s cursor infinite;
+}
+
 pre {
   padding: 0;
 }
@@ -80,6 +97,7 @@ pre {
   color: #000;
 }
 
+@keyframes cursor {50% { opacity: 0 }}
 @keyframes blink {50% { color: transparent }}
 .loader__dot { animation: 1s blink infinite }
 .loader__dot:nth-child(2) { animation-delay: 250ms }
