@@ -30,7 +30,7 @@ export default {
   },
   mounted() {
     this.implementation = this.$route.query.implementation;
-    this.sessionId = this.$route.query.session_id;
+    this.sessionId = this.$route.query.session_id || 'test';
     this.$nextTick(() => {
       this.$refs.inputField.focus();
     });
