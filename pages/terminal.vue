@@ -22,6 +22,7 @@ export default {
   data() {
     return {
       implementation: "",
+      sessionId: "",
       newMessage: "",
       isSubmitting: false,
       messages: [],
@@ -29,6 +30,7 @@ export default {
   },
   mounted() {
     this.implementation = this.$route.query.implementation;
+    this.sessionId = this.$route.query.session_id;
     this.$nextTick(() => {
       this.$refs.inputField.focus();
     });
@@ -36,10 +38,11 @@ export default {
   methods: {
     async postMessage () {
       this.isSubmitting = true;
-      const {data} = await axios.post(`https://cerberus-vsm8.onrender.com/api/implementations/${this.implementation}`, {message: this.newMessage})
+      const {data} = await axios.post(`https://cerberus-vsm8.onrender.com/api/implementations/${this.implementation}`, {message: this.newMessage, session_id: this.sessionId})
+      // const {data} = await axios.post(`http://localhost:8000/api/implementations/${this.implementation}`, {message: this.newMessage, session_id: this.sessionId})
       this.isSubmitting = false;
       this.messages.push({"content": this.newMessage, className: 'user'})
-      this.messages.push({"content": data?.response?.[0]?.[1] || 'bad response', className: 'bot'})
+      this.messages.push({"content": data.response || 'bad response', className: 'bot'})
       this.newMessage = '';
     }
   }
