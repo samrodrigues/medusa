@@ -7,7 +7,7 @@
       {{ message.content }}
     </div>
     <span class="caret-block">&gt;</span>
-    <input ref="inputField" class="caret-block" :class="{'submitted blink': isSubmitting}" type="text" v-model="newMessage" @keyup.enter="postMessage">
+    <input ref="inputField" class="caret-block" :class="{'submitted blink': isSubmitting}" type="text" v-model="newMessage" @keyup.enter="postMessage" placeholder="Digite seu comando aqui">
     <div class="cursor" v-if="!isSubmitting"></div>
     <div class="loader message" v-if="isSubmitting">
       <span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span>
