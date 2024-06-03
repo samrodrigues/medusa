@@ -32,9 +32,9 @@ export default {
   mounted() {
     this.implementation = this.$route.query.implementation;
     this.sessionId = this.$route.query.session_id || 'test';
-    this.$nextTick(() => {
+    setTimeout(() => {
       this.$refs.inputField.focus();
-    });
+    },200);
   },
   methods: {
     async postMessage () {
