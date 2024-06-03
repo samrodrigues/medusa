@@ -1,7 +1,9 @@
 <template>
   <main>
     <div class="message welcome">
-      CERBERUS v2422.1
+      <template v-if="implementation">
+        <span class="implementation-name">{{implementation.name}} </span> @
+      </template> CERBERUS v2423.1
     </div>
     <div class="message" v-for="message in messages" :class="message.className">
       {{ message.content }}
@@ -29,18 +31,26 @@ export default {
       messages: [],
     }
   },
-  mounted() {
-    this.implementation = this.$route.query.implementation;
+  async mounted() {
+    await this.fetchImplementations();
     this.sessionId = this.$route.query.session_id || 'test';
     setTimeout(() => {
       this.$refs.inputField.focus();
     },200);
   },
   methods: {
+    async fetchImplementations() {
+      const {data} = await axios.get(`https://cerberus-vsm8.onrender.com/api/implementations/`)
+      // const {data} = await axios.get(`http://localhost:8000/api/implementations/`)
+      const implementation = data.find(implementation => implementation.uuid === this.$route.query.implementation)
+      console.log(implementation)
+      this.implementation = {...implementation}
+    },
+
     async postMessage () {
       this.isSubmitting = true;
-      const {data} = await axios.post(`https://cerberus-vsm8.onrender.com/api/implementations/${this.implementation}`, {message: this.newMessage, session_id: this.sessionId})
-      // const {data} = await axios.post(`http://localhost:8000/api/implementations/${this.implementation}`, {message: this.newMessage, session_id: this.sessionId})
+      const {data} = await axios.post(`https://cerberus-vsm8.onrender.com/api/implementations/${this.implementation.uuid}`, {message: this.newMessage, session_id: this.sessionId})
+      // const {data} = await axios.post(`http://localhost:8000/api/implementations/${this.implementation.uuid}`, {message: this.newMessage, session_id: this.sessionId})
       this.isSubmitting = false;
       this.messages.push({"content": this.newMessage, className: 'user'})
       this.messages.push({"content": data.response || 'bad response', className: 'bot'})
@@ -55,6 +65,9 @@ main {
   color: #ededed;
   font-family: monospace;
   padding: 24px 24px 48px;
+}
+.implementation-name {
+  color: #22bb33;
 }
 input {
   background-color: transparent;
