@@ -18,6 +18,7 @@
 </template>
 <script>
 import axios from 'axios';
+import {v4 as uuidv4} from 'uuid';
 
 export default {
   name: "Terminal",
@@ -33,7 +34,8 @@ export default {
   },
   async mounted() {
     await this.fetchImplementations();
-    this.sessionId = this.$route.query.session_id || 'test';
+    const uuid = uuidv4();
+    this.sessionId = this.$route.query.session_id || uuid;
     setTimeout(() => {
       this.$refs.inputField.focus();
     },200);
@@ -43,7 +45,6 @@ export default {
       const {data} = await axios.get(`https://cerberus-vsm8.onrender.com/api/implementations/`)
       // const {data} = await axios.get(`http://localhost:8000/api/implementations/`)
       const implementation = data.find(implementation => implementation.uuid === this.$route.query.implementation)
-      console.log(implementation)
       this.implementation = {...implementation}
     },
 
