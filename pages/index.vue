@@ -25,6 +25,8 @@ export default {
   props: {},
   data() {
     return {
+      isProd: 1,
+      apiUrl: 'https://cerberus-vsm8.onrender.com/api',
       implementation: "",
       sessionId: "",
       newMessage: "",
@@ -33,6 +35,9 @@ export default {
     }
   },
   async mounted() {
+    if (!this.isProd) {
+      this.apiUrl = 'http://localhost:8000/api';
+    }
     await this.fetchImplementations();
     const uuid = uuidv4();
     this.sessionId = this.$route.query.session_id || uuid;
@@ -42,16 +47,15 @@ export default {
   },
   methods: {
     async fetchImplementations() {
-      const {data} = await axios.get(`https://cerberus-vsm8.onrender.com/api/implementations/`)
-      // const {data} = await axios.get(`http://localhost:8000/api/implementations/`)
-      const implementation = data.find(implementation => implementation.uuid === this.$route.query.implementation)
+      const {data} = await axios.get(`${this.apiUrl}/implementations/`)
+      const selectedImplementation = this.$route.query.implementation
+      const implementation = selectedImplementation ? data.find(implementation => implementation.uuid === selectedImplementation) : data[Math.floor(Math.random()*data.length)]
       this.implementation = {...implementation}
     },
 
     async postMessage () {
       this.isSubmitting = true;
-      const {data} = await axios.post(`https://cerberus-vsm8.onrender.com/api/implementations/${this.implementation.uuid}`, {message: this.newMessage, session_id: this.sessionId})
-      // const {data} = await axios.post(`http://localhost:8000/api/implementations/${this.implementation.uuid}`, {message: this.newMessage, session_id: this.sessionId})
+      const {data} = await axios.post(`${this.apiUrl}/implementations/${this.implementation.uuid}`, {message: this.newMessage, session_id: this.sessionId})
       this.isSubmitting = false;
       this.messages.push({"content": this.newMessage, className: 'user'})
       this.messages.push({"content": data.response || 'bad response', className: 'bot'})
